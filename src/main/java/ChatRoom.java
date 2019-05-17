@@ -1,18 +1,25 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 // ChatRoom类，聊天室类
 public class ChatRoom {
+
+    private static CopyOnWriteArrayList<Channel> clientList = new CopyOnWriteArrayList<Channel>();
 
     public static void main(String[] args) throws IOException {
         System.out.println("----ChatRoom----");
         ServerSocket chatRoom = new ServerSocket(8888);
 
+
+
         while (true){
             Socket client = chatRoom.accept();
             System.out.println("一个用户已经连接");
-            new Thread(new Channel(client)).start();
+            Channel channel = new Channel(client);
+            clientList.add(channel);
+            new Thread(channel).start();
         }
 
 

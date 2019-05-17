@@ -14,6 +14,9 @@ public class Client {
     // 首先是Client类，将收(Receive)发(Send)封装成两个独立的类，各自都继承Runnable接口
     // 其次是ChatRoom类，让它也有能够连接多用户的能力
 
+    // 现在要实现不再是每个Client只与ChatRoom通信，每个Client发送消息后其他Client界面上也能收到消息
+    // 所以现在 昵称name 就有作用了
+
     public static void main(String[] args) throws IOException {
         System.out.println("----Client----");
 
@@ -22,7 +25,14 @@ public class Client {
 //        br = new BufferedReader(new InputStreamReader(System.in));
 //        String uname = br.readLine();
 //        System.out.println(uname);
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        System.out.println("请输入进入聊天室的昵称:");
+        String userName = br.readLine();
+
         Socket client = new Socket("localhost", 8888);
+
+
 //        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(client.getOutputStream()));
 //
 //
@@ -38,7 +48,7 @@ public class Client {
 //        }
 
 
-        new Thread(new Send(client)).start();
+        new Thread(new Send(client, userName)).start();
         new Thread(new Receive(client)).start();
 
 
