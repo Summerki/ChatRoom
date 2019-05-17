@@ -19,6 +19,8 @@ public class ChatRoom {
         while (true){
             String msg = br.readLine();
             System.out.println("收到消息: " + msg);
+            bw.write("聊天室+" + msg + "\r\n");
+            bw.flush();
         }
 
     }
