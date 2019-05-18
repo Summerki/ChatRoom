@@ -19,6 +19,8 @@ public class Client {
 
     // 退出群聊功能: 用户输入bye即可退出群聊
 
+    // 私聊功能: 使用[@XXX 消息]这样的格式可以只让XXX收到此条消息
+
     public static void main(String[] args) throws IOException {
         System.out.println("----Client----");
 

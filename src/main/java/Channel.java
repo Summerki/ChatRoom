@@ -70,6 +70,22 @@ public class Channel implements Runnable {
             this.sendMsgToOthers(rcvMsg, false);
             release();
             rcvMsg = "";
+        }else if(rcvMsg.startsWith("@")){  // 以@开始，代表该用户想要私聊某一个人
+            String[] msgs = rcvMsg.split(" ");
+            String toUser = msgs[0].substring(1); // 获取要发给的用户名
+            // msgs[1]代表要私聊的消息
+            boolean isFind = false;  // 默认开始未找到该用户
+            for (Channel c : ChatRoom.clientList){
+                if(c.userName.equals(toUser)){  //  代表确有其人
+                    c.send(this.userName + "私聊你说: " + msgs[1]);
+                    isFind = true;
+                    rcvMsg = "";
+                }
+            }
+            if (!isFind){
+                this.send("未找到该用户！请重新发送消息！");
+                rcvMsg = "";
+            }
         }
         return rcvMsg;
     }
