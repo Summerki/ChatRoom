@@ -6,7 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 // ChatRoom类，聊天室类
 public class ChatRoom {
 
-    private static CopyOnWriteArrayList<Channel> clientList = new CopyOnWriteArrayList<Channel>();
+    public static CopyOnWriteArrayList<Channel> clientList = new CopyOnWriteArrayList<Channel>();  // 存放所有的Client集合
 
     public static void main(String[] args) throws IOException {
         System.out.println("----ChatRoom----");

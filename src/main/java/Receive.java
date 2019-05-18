@@ -21,7 +21,7 @@ public class Receive implements Runnable{
             try {
                 br = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 rcvMsg = br.readLine();
-                System.out.println("收到消息: " + rcvMsg);
+                System.out.println(rcvMsg);
             } catch (IOException e) {
                 e.printStackTrace();
             }
