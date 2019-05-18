@@ -8,9 +8,10 @@ public class Channel implements Runnable {
 
     private Socket client;
     private BufferedReader br;
-    private String rcvMsg;
+    private String rcvMsg = "";
     private BufferedWriter bw;
     private String userName;
+    private boolean isRunning = true; // 默认为true
 
 
 
@@ -18,14 +19,15 @@ public class Channel implements Runnable {
     public Channel(Socket client) throws IOException {
         this.client = client;
         this.userName = receive();
-
+        this.send("欢迎来到CSU聊天室");
+        this.sendMsgToOthers("欢迎" + this.userName + "来到CSU聊天室", true);
     }
 
     public void run() {
-        while (true){
+        while (isRunning){
             try {
                 rcvMsg = receive();
-                sendMsgToOthers(rcvMsg);
+                sendMsgToOthers(rcvMsg, false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -35,11 +37,15 @@ public class Channel implements Runnable {
 
     // 某一个CLient发送的消息也让其他Client可以看见
     // 发送消息给其他Client
-    private void sendMsgToOthers(String msg) throws IOException {
+    // msg: 某一个Client发送的msg，再转发给其他Client
+    // isSys: 指示是否是系统消息
+    private void sendMsgToOthers(String msg, boolean isSys) throws IOException {
         for (Channel channel : ChatRoom.clientList){
             if(channel.equals(this)){ // 自己
                 continue;
-            }else{
+            }else if(isSys){  // 系统消息
+                channel.send(msg);
+            }else if(!msg.equals("")){ // 发送消息不为空时才发出去
                 channel.send(this.userName + "说:" + msg);
             }
         }
@@ -60,6 +66,20 @@ public class Channel implements Runnable {
         br = new BufferedReader(new InputStreamReader(client.getInputStream()));
         rcvMsg = br.readLine();
         System.out.println("收到消息: " + rcvMsg);  // ChatRoom后台打印确认是否接收到消息
+        if(rcvMsg.equals("byeCSU")){
+            this.sendMsgToOthers(rcvMsg, false);
+            release();
+            rcvMsg = "";
+        }
         return rcvMsg;
+    }
+
+
+    // 释放资源
+    private void release() throws IOException {
+        this.sendMsgToOthers(this.userName + "退出了聊天室", true);
+        ChatRoom.clientList.remove(this);
+        CloseStream.close(client, br, bw);
+        this.isRunning = false;
     }
 }

@@ -9,6 +9,7 @@ public class Receive implements Runnable{
     private Socket client;
     private BufferedReader br;
     private String rcvMsg;
+    private boolean isRunning = true;
 
     // 构造函数
     public Receive(Socket client) {
@@ -17,13 +18,16 @@ public class Receive implements Runnable{
 
     public void run() {
         // 这里写多线程具体要干的事情
-        while (true){
+        while (isRunning){
             try {
                 br = new BufferedReader(new InputStreamReader(client.getInputStream()));
                 rcvMsg = br.readLine();
-                System.out.println(rcvMsg);
-            } catch (IOException e) {
-                e.printStackTrace();
+                if (!(rcvMsg.equals(null) || rcvMsg.equals(""))){
+                    System.out.println(rcvMsg);
+                }
+            } catch (Exception e) {
+                System.out.println("断开连接");
+                this.isRunning = false;
             }
         }
     }

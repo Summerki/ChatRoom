@@ -17,6 +17,8 @@ public class Client {
     // 现在要实现不再是每个Client只与ChatRoom通信，每个Client发送消息后其他Client界面上也能收到消息
     // 所以现在 昵称name 就有作用了
 
+    // 退出群聊功能: 用户输入bye即可退出群聊
+
     public static void main(String[] args) throws IOException {
         System.out.println("----Client----");
 
